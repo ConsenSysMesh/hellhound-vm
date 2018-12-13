@@ -1,5 +1,7 @@
 package hh
 
+import "encoding/hex"
+
 type VM interface {
 	Version() string
 	Run([]byte) error
@@ -43,3 +45,21 @@ type Key struct {
 	Len   int
 	Value []byte
 }
+
+func NewKey(keyType, keyUsage byte, value []byte) *Key {
+	return &Key{
+		Type:  keyType,
+		Usage: keyUsage,
+		Len:   len(value),
+		Value: value,
+	}
+}
+
+func (k Key) String() string {
+	return hex.EncodeToString(k.Value)
+}
+
+func (k Key) IsValid() bool {
+	return k.Len == len(k.Value)
+}
+
