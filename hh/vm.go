@@ -3,8 +3,19 @@ package hh
 import "encoding/hex"
 
 type VM interface {
+	Keystore() Keystore
+	RegisterSet() RegisterSet
+	Heap() []byte
+	Stack() []byte
+	HP() int
+	SP() int
+	GetAndMoveHPForward() int
+	GetAndMoveHPForwardN(int) int
+	MoveHPForward() int
+	MoveHPForwardN(int) int
 	Version() string
 	Run([]byte) error
+	Dump()
 }
 
 
@@ -25,7 +36,7 @@ type Dispatcher interface {
 	Dispatch(Opcode) (Instruction, error)
 }
 
-type Instruction func(*VM) error
+type Instruction func(VM) error
 
 type OpCodeRoute struct {
 	Opcode Opcode
