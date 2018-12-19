@@ -1,9 +1,22 @@
 package core
 
-import "github.com/ConsenSys/hellhound-vm/hh"
+import (
+	"github.com/ConsenSys/hellhound-vm/dispatchers"
+	"github.com/ConsenSys/hellhound-vm/hh"
+)
 
 type dispatcher struct {
 	instructions map[hh.OpCode]hh.Instruction
+}
+
+func Dispatcher() VMConfigurer{
+	return DispatcherCfg(
+		dispatchers.Arithmetic(),
+		dispatchers.Stack(),
+		dispatchers.Keystore(),
+		dispatchers.RegisterSet(),
+		dispatchers.Paillier(),
+	)
 }
 
 func DispatcherCfg(subDispatchers ...[]hh.Operation) VMConfigurer{
@@ -14,8 +27,8 @@ func DispatcherCfg(subDispatchers ...[]hh.Operation) VMConfigurer{
 
 func NewDispatcher(subDispatchers ...[]hh.Operation) hh.Dispatcher {
 	instructions := make(map[hh.OpCode]hh.Instruction)
-	for _, routes := range subDispatchers {
-		for _, route := range routes {
+	for _, operations := range subDispatchers {
+		for _, route := range operations {
 			instructions[route.OpCode] = route.Instruction
 		}
 	}

@@ -5,6 +5,10 @@ type OpCode byte
 // 0x0 range - arithmetic ops.
 const(
 	STOP OpCode = iota
+	ADD
+	SUB
+	MUL
+	DIV
 )
 
 // 0x10 range - comparison ops

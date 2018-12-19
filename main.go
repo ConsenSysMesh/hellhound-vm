@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"github.com/ConsenSys/hellhound-vm/core"
-	"github.com/ConsenSys/hellhound-vm/dispatchers"
 	"github.com/ConsenSys/hellhound-vm/hh"
 	"log"
 )
@@ -21,12 +20,6 @@ func main() {
 		core.RegisterSetCfg(
 			hh.RegisterSetSlotNumber(8),
 		),
-		core.DispatcherCfg(
-			dispatchers.Stack(),
-			dispatchers.Keystore(),
-			dispatchers.RegisterSet(),
-			dispatchers.Paillier(),
-		),
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -40,16 +33,24 @@ func main() {
 		byte(hh.PUSH), 0x03, 0xAB, 0XCD, 0XEF,
 		byte(hh.PUSH), 0x02, 0x0A, 0X0B,
 		byte(hh.PUSH), 0x04, 0x09, 0x08, 0x07, 0x06,
-		byte(hh.POP),
+		byte(hh.PUSH), 0x01, 0x02,
+		byte(hh.PUSH), 0x01, 0x01,
+		byte(hh.ADD),
+		byte(hh.PUSH), 0x01, 0x03,
+		byte(hh.MUL),
+		byte(hh.PUSH), 0x01, 0x01,
+		byte(hh.SUB),
+		byte(hh.PUSH), 0x01, 0x02,
+		byte(hh.DIV),
 	}
 
 	hhContract := hh.NewContract(code)
 
 	err = hhvm.Run(hhContract)
-
+	hhvm.Dump()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	hhvm.Dump()
+
 }
