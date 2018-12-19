@@ -12,15 +12,21 @@ const(
 
 )
 
-// 0x20 range - generic vm components ops.
+// 0x20 range - storage and execution
 const(
-	LOADKEY OpCode = iota + 0x20
+	POP OpCode = iota + 0x20
+	PUSH
+)
+
+// 0x30 range - generic vm components ops.
+const(
+	LOADKEY OpCode = iota + 0x30
 	LOADREG
 )
 
-// 0x30 range - Paillier ops.
+// 0x40 range - Paillier ops.
 const(
-	PAILLIERADDCIPHERS OpCode = iota + 0x30
+	PAILLIERADDCIPHERS OpCode = iota + 0x40
 	PAILIERADDCONSTANT
 	PAILIERMULCONSTANT
 )

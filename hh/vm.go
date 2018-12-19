@@ -31,15 +31,15 @@ type Dispatcher interface {
 
 type Instruction func(VM,*Contract) error
 
-type OpCodeRoute struct {
-	Opcode      OpCode
+type Operation struct {
+	OpCode      OpCode
 	Instruction Instruction
 }
 
-func NewInstruction(opcode OpCode, instruction Instruction) OpCodeRoute {
-	return OpCodeRoute{
-		Opcode: opcode,
-		Instruction:    instruction,
+func NewInstruction(opcode OpCode, instruction Instruction) Operation {
+	return Operation{
+		OpCode:      opcode,
+		Instruction: instruction,
 	}
 }
 

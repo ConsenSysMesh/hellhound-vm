@@ -22,6 +22,7 @@ func main() {
 			hh.RegisterSetSlotNumber(8),
 		),
 		core.DispatcherCfg(
+			dispatchers.Stack(),
 			dispatchers.Keystore(),
 			dispatchers.RegisterSet(),
 			dispatchers.Paillier(),
@@ -36,6 +37,10 @@ func main() {
 	code := []byte{
 		byte(hh.LOADKEY), 0x05, 0x01, 0x00, 0x00, 0x04, 0x01, 0x02, 0x03, 0x04,
 		byte(hh.LOADREG), 0x03, 0x00, 0x08, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
+		byte(hh.PUSH), 0x03, 0xAB, 0XCD, 0XEF,
+		byte(hh.PUSH), 0x02, 0x0A, 0X0B,
+		byte(hh.PUSH), 0x04, 0x09, 0x08, 0x07, 0x06,
+		byte(hh.POP),
 	}
 
 	hhContract := hh.NewContract(code)

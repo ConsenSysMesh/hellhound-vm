@@ -2,25 +2,25 @@ package dispatchers
 
 import "github.com/ConsenSys/hellhound-vm/hh"
 
-func Paillier() []hh.OpCodeRoute {
-	return []hh.OpCodeRoute{
-		hh.NewInstruction(hh.PAILLIERADDCIPHERS, PaillierAddCiphers),
-		hh.NewInstruction(hh.PAILIERADDCONSTANT, PaillierAddConstant),
-		hh.NewInstruction(hh.PAILIERMULCONSTANT, PaillierMulConstant),
+func Paillier() []hh.Operation {
+	return []hh.Operation{
+		hh.NewInstruction(hh.PAILLIERADDCIPHERS, paillierAddCiphers),
+		hh.NewInstruction(hh.PAILIERADDCONSTANT, paillierAddConstant),
+		hh.NewInstruction(hh.PAILIERMULCONSTANT, paillierMulConstant),
 	}
 }
 
-func PaillierAddCiphers(_ hh.VM, _ *hh.Contract) error {
+func paillierAddCiphers(_ hh.VM, _ *hh.Contract) error {
 
 	return nil
 }
 
-func PaillierAddConstant(_ hh.VM, _ *hh.Contract) error {
+func paillierAddConstant(_ hh.VM, _ *hh.Contract) error {
 
 	return nil
 }
 
-func PaillierMulConstant(_ hh.VM, _ *hh.Contract) error {
+func paillierMulConstant(_ hh.VM, _ *hh.Contract) error {
 
 	return nil
 }

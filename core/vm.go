@@ -74,6 +74,12 @@ func (vm vm) RegisterSet() hh.RegisterSet {
 func (vm vm) Dump() {
 	fmt.Println("--------------------------------------------")
 	fmt.Println("VM DUMP")
+	fmt.Println("\t STACK")
+	for i, element := range vm.stack.Data() {
+		if element != nil {
+			fmt.Printf("\t\t [ %3d ] = %s\n", i, hex.EncodeToString(element.Bytes()))
+		}
+	}
 	fmt.Println("\t KEYSTORE")
 	fmt.Printf("\t\t slots : %d\n", len(vm.keystore.Keys()))
 	for slot, key := range vm.keystore.Keys() {

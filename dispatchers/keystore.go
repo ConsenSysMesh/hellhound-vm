@@ -4,14 +4,14 @@ import (
 	"github.com/ConsenSys/hellhound-vm/hh"
 )
 
-func Keystore() []hh.OpCodeRoute{
-	return []hh.OpCodeRoute{
-		hh.NewInstruction(hh.LOADKEY, LoadKey),
+func Keystore() []hh.Operation {
+	return []hh.Operation{
+		hh.NewInstruction(hh.LOADKEY, loadKey),
 	}
 }
 
-func LoadKey(vm hh.VM, contract *hh.Contract) error{
-	slot, keyType, usage, keyValue, err := LoadKeyOperands(contract)
+func loadKey(vm hh.VM, contract *hh.Contract) error{
+	slot, keyType, usage, keyValue, err := loadKeyOperands(contract)
 	if err != nil{
 		return err
 	}
@@ -19,7 +19,7 @@ func LoadKey(vm hh.VM, contract *hh.Contract) error{
 	return vm.Keystore().Store(int(slot), key)
 }
 
-func LoadKeyOperands(contract *hh.Contract) (slot, keyType, usage byte, keyValue []byte, err error){
+func loadKeyOperands(contract *hh.Contract) (slot, keyType, usage byte, keyValue []byte, err error){
 	slot = contract.Code[contract.GetAndMovePCForward()]
 	keyType = contract.Code[contract.GetAndMovePCForward()]
 	usage = contract.Code[contract.GetAndMovePCForward()]

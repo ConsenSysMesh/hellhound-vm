@@ -6,17 +6,17 @@ type dispatcher struct {
 	instructions map[hh.OpCode]hh.Instruction
 }
 
-func DispatcherCfg(subDispatchers ...[]hh.OpCodeRoute) VMConfigurer{
+func DispatcherCfg(subDispatchers ...[]hh.Operation) VMConfigurer{
 	return func(_vm *vm) {
 		_vm.dispatcher = NewDispatcher(subDispatchers...)
 	}
 }
 
-func NewDispatcher(subDispatchers ...[]hh.OpCodeRoute) hh.Dispatcher {
+func NewDispatcher(subDispatchers ...[]hh.Operation) hh.Dispatcher {
 	instructions := make(map[hh.OpCode]hh.Instruction)
 	for _, routes := range subDispatchers {
 		for _, route := range routes {
-			instructions[route.Opcode] = route.Instruction
+			instructions[route.OpCode] = route.Instruction
 		}
 	}
 	return &dispatcher{
