@@ -1,24 +1,17 @@
 package hh
 
-import "encoding/hex"
+import (
+	"encoding/hex"
+)
 
 type VM interface {
 	Keystore() Keystore
 	RegisterSet() RegisterSet
-	Heap() []byte
-	Stack() []byte
-	HP() int
-	SP() int
-	GetAndMoveHPForward() int
-	GetAndMoveHPForwardN(int) int
-	MoveHPForward() int
-	MoveHPForwardN(int) int
+	Stack() Stack
 	Version() string
-	Run([]byte) error
+	Run(*Contract) error
 	Dump()
 }
-
-
 
 type Keystore interface {
 	Store(slot int, key *Key) error
@@ -33,17 +26,17 @@ type RegisterSet interface {
 }
 
 type Dispatcher interface {
-	Dispatch(Opcode) (Instruction, error)
+	Dispatch(OpCode) (Instruction, error)
 }
 
-type Instruction func(VM) error
+type Instruction func(VM,*Contract) error
 
 type OpCodeRoute struct {
-	Opcode Opcode
-	Instruction    Instruction
+	Opcode      OpCode
+	Instruction Instruction
 }
 
-func NewInstruction(opcode Opcode, instruction Instruction) OpCodeRoute {
+func NewInstruction(opcode OpCode, instruction Instruction) OpCodeRoute {
 	return OpCodeRoute{
 		Opcode: opcode,
 		Instruction:    instruction,
