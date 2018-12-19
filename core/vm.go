@@ -14,13 +14,11 @@ type vm struct {
 	keystore    hh.Keystore
 	registerSet hh.RegisterSet
 	dispatcher  hh.Dispatcher
-	stack       []byte
+	stack       hh.Stack
 	// stack pointer
-	sp   int
-	heap []byte
-	// heap pointer
-	hp int
+	sp int
 }
+
 type VMConfigurer func(*vm)
 
 func NewVM(configurers ...VMConfigurer) (hh.VM, error) {
@@ -31,17 +29,17 @@ func NewVM(configurers ...VMConfigurer) (hh.VM, error) {
 	return vm, nil
 }
 
-func (vm *vm) Run(code []byte) error {
-	// reset VM values and copy code to the heap
-	vm.reset(code)
-	for vm.HP() < len(vm.Heap()) {
+func (vm *vm) Run(contract *hh.Contract) error {
+	// reset VM values
+	vm.reset()
+	for contract.PC() < len(contract.Code) {
 		// dispatch current opcode and get next instruction to execute
-		instruction, err := vm.dispatcher.Dispatch(hh.Opcode(vm.Heap()[vm.GetAndMoveHPForward()]))
+		instruction, err := vm.dispatcher.Dispatch(hh.OpCode(contract.Code[contract.GetAndMovePCForward()]))
 		if err != nil {
 			return err
 		}
 		// execute instruction
-		err = instruction(vm)
+		err = instruction(vm, contract)
 		if err != nil {
 			return err
 		}
@@ -49,48 +47,16 @@ func (vm *vm) Run(code []byte) error {
 	return nil
 }
 
-func (vm *vm) reset(code []byte) {
-	vm.heap = code
-	vm.hp = 0
+func (vm *vm) reset() {
 	vm.sp = 0
 }
 
-func (vm vm) Heap() []byte {
-	return vm.heap
-}
-
-func (vm vm) Stack() []byte {
+func (vm vm) Stack() hh.Stack {
 	return vm.stack
-}
-
-func (vm vm) HP() int {
-	return vm.hp
 }
 
 func (vm vm) SP() int {
 	return vm.sp
-}
-
-func (vm *vm) GetAndMoveHPForward() int {
-	hp := vm.hp
-	vm.hp++
-	return hp
-}
-
-func (vm *vm) GetAndMoveHPForwardN(n int) int {
-	hp := vm.hp
-	vm.hp += n
-	return hp
-}
-
-func (vm *vm) MoveHPForward() int {
-	vm.hp++
-	return vm.hp
-}
-
-func (vm *vm) MoveHPForwardN(n int) int {
-	vm.hp += n
-	return vm.hp
 }
 
 func (vm vm) Version() string {
@@ -111,7 +77,7 @@ func (vm vm) Dump() {
 	fmt.Println("\t KEYSTORE")
 	fmt.Printf("\t\t slots : %d\n", len(vm.keystore.Keys()))
 	for slot, key := range vm.keystore.Keys() {
-		if key != nil{
+		if key != nil {
 			fmt.Printf("\t\t [ %3d ] = %s\n", slot, key.String())
 		}
 	}

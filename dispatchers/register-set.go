@@ -8,8 +8,8 @@ func RegisterSet() []hh.OpCodeRoute {
 	}
 }
 
-func LoadReg(vm hh.VM) error {
-	slot, value, err := LoadRegOperands(vm)
+func LoadReg(vm hh.VM, contract *hh.Contract) error {
+	slot, value, err := LoadRegOperands(contract)
 	if err != nil {
 		return err
 	}
@@ -17,9 +17,9 @@ func LoadReg(vm hh.VM) error {
 	return nil
 }
 
-func LoadRegOperands(vm hh.VM) (slot byte, value []byte, err error) {
-	slot = vm.Heap()[vm.GetAndMoveHPForward()]
-	size := hh.GetLenInt(vm.Heap()[vm.HP():vm.MoveHPForwardN(2)])
-	value = vm.Heap()[vm.HP():vm.MoveHPForwardN(size)]
+func LoadRegOperands(contract *hh.Contract) (slot byte, value []byte, err error) {
+	slot = contract.Code[contract.GetAndMovePCForward()]
+	size := hh.GetLenInt(contract.Code[contract.PC():contract.MovePCForwardN(2)])
+	value = contract.Code[contract.PC():contract.MovePCForwardN(size)]
 	return
 }

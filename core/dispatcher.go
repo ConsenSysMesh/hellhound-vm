@@ -3,7 +3,7 @@ package core
 import "github.com/ConsenSys/hellhound-vm/hh"
 
 type dispatcher struct {
-	instructions map[hh.Opcode]hh.Instruction
+	instructions map[hh.OpCode]hh.Instruction
 }
 
 func DispatcherCfg(subDispatchers ...[]hh.OpCodeRoute) VMConfigurer{
@@ -13,7 +13,7 @@ func DispatcherCfg(subDispatchers ...[]hh.OpCodeRoute) VMConfigurer{
 }
 
 func NewDispatcher(subDispatchers ...[]hh.OpCodeRoute) hh.Dispatcher {
-	instructions := make(map[hh.Opcode]hh.Instruction)
+	instructions := make(map[hh.OpCode]hh.Instruction)
 	for _, routes := range subDispatchers {
 		for _, route := range routes {
 			instructions[route.Opcode] = route.Instruction
@@ -24,7 +24,7 @@ func NewDispatcher(subDispatchers ...[]hh.OpCodeRoute) hh.Dispatcher {
 	}
 }
 
-func (dispatcher dispatcher) Dispatch(opcode hh.Opcode) (hh.Instruction, error) {
+func (dispatcher dispatcher) Dispatch(opcode hh.OpCode) (hh.Instruction, error) {
 	instruction, exists := dispatcher.instructions[opcode]
 	if !exists {
 		return nil, InstructionNotFound{Opcode: opcode}

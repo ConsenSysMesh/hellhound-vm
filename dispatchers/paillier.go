@@ -10,17 +10,17 @@ func Paillier() []hh.OpCodeRoute {
 	}
 }
 
-func PaillierAddCiphers(_ hh.VM) error {
+func PaillierAddCiphers(_ hh.VM, _ *hh.Contract) error {
 
 	return nil
 }
 
-func PaillierAddConstant(_ hh.VM) error {
+func PaillierAddConstant(_ hh.VM, _ *hh.Contract) error {
 
 	return nil
 }
 
-func PaillierMulConstant(_ hh.VM) error {
+func PaillierMulConstant(_ hh.VM, _ *hh.Contract) error {
 
 	return nil
 }

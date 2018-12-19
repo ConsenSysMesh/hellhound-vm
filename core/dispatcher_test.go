@@ -17,10 +17,10 @@ func TestDispatcher_Dispatch(t *testing.T) {
 
 	var tests = []struct {
 		name    string
-		opcode  hh.Opcode
+		opcode  hh.OpCode
 		wantErr bool
 	}{
-		{"0xFF unknown opcode", hh.Opcode(0xFF), true},
+		{"0xFF unknown opcode", hh.OpCode(0xFF), true},
 	}
 
 	for _, tt := range tests {

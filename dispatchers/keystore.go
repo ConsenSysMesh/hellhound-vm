@@ -10,8 +10,8 @@ func Keystore() []hh.OpCodeRoute{
 	}
 }
 
-func LoadKey(vm hh.VM) error{
-	slot, keyType, usage, keyValue, err := LoadKeyOperands(vm)
+func LoadKey(vm hh.VM, contract *hh.Contract) error{
+	slot, keyType, usage, keyValue, err := LoadKeyOperands(contract)
 	if err != nil{
 		return err
 	}
@@ -19,11 +19,11 @@ func LoadKey(vm hh.VM) error{
 	return vm.Keystore().Store(int(slot), key)
 }
 
-func LoadKeyOperands(vm hh.VM) (slot, keyType, usage byte, keyValue []byte, err error){
-	slot = vm.Heap()[vm.GetAndMoveHPForward()]
-	keyType = vm.Heap()[vm.GetAndMoveHPForward()]
-	usage = vm.Heap()[vm.GetAndMoveHPForward()]
-	size := hh.GetLenInt(vm.Heap()[vm.HP() : vm.MoveHPForwardN(2)])
-	keyValue = vm.Heap()[vm.HP() : vm.MoveHPForwardN(size)]
+func LoadKeyOperands(contract *hh.Contract) (slot, keyType, usage byte, keyValue []byte, err error){
+	slot = contract.Code[contract.GetAndMovePCForward()]
+	keyType = contract.Code[contract.GetAndMovePCForward()]
+	usage = contract.Code[contract.GetAndMovePCForward()]
+	size := hh.GetLenInt(contract.Code[contract.PC() : contract.MovePCForwardN(2)])
+	keyValue = contract.Code[contract.PC() : contract.MovePCForwardN(size)]
 	return
 }
