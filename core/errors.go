@@ -6,7 +6,7 @@ import (
 )
 
 type InstructionNotFound struct {
-	Opcode hh.Opcode
+	Opcode hh.OpCode
 }
 
 func (inf InstructionNotFound) Error() string {

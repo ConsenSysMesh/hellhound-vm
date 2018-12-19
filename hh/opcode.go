@@ -1,16 +1,26 @@
 package hh
 
-type Opcode byte
+type OpCode byte
 
+// 0x0 range - arithmetic ops.
 const(
-	STOP Opcode = 0x00
+	STOP OpCode = iota
+)
 
-	// General purpose opcodes
-	LOADKEY Opcode = 0x20
-	LOADREG Opcode = 0x21
+// 0x10 range - comparison ops
+const(
 
-	// Paillier opcodes
-	PAILLIERADDCIPHERS Opcode = 0x30
-	PAILIERADDCONSTANT Opcode = 0x31
-	PAILIERMULCONSTANT Opcode = 0x32
+)
+
+// 0x20 range - generic vm components ops.
+const(
+	LOADKEY OpCode = iota + 0x20
+	LOADREG
+)
+
+// 0x30 range - Paillier ops.
+const(
+	PAILLIERADDCIPHERS OpCode = iota + 0x30
+	PAILIERADDCONSTANT
+	PAILIERMULCONSTANT
 )
