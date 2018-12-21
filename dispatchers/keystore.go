@@ -10,7 +10,7 @@ func Keystore() []hh.Operation {
 	}
 }
 
-func loadKey(vm hh.VM, contract *hh.Contract) error{
+func loadKey(vm hh.VM, contract *hh.Ki) error{
 	slot, keyType, usage, keyValue, err := loadKeyOperands(contract)
 	if err != nil{
 		return err
@@ -19,7 +19,7 @@ func loadKey(vm hh.VM, contract *hh.Contract) error{
 	return vm.Keystore().Store(int(slot), key)
 }
 
-func loadKeyOperands(contract *hh.Contract) (slot, keyType, usage byte, keyValue []byte, err error){
+func loadKeyOperands(contract *hh.Ki) (slot, keyType, usage byte, keyValue []byte, err error){
 	slot = contract.Code[contract.GetAndMovePCForward()]
 	keyType = contract.Code[contract.GetAndMovePCForward()]
 	usage = contract.Code[contract.GetAndMovePCForward()]

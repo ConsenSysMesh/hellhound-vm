@@ -10,17 +10,17 @@ func Paillier() []hh.Operation {
 	}
 }
 
-func paillierAddCiphers(_ hh.VM, _ *hh.Contract) error {
+func paillierAddCiphers(_ hh.VM, _ *hh.Ki) error {
 
 	return nil
 }
 
-func paillierAddConstant(_ hh.VM, _ *hh.Contract) error {
+func paillierAddConstant(_ hh.VM, _ *hh.Ki) error {
 
 	return nil
 }
 
-func paillierMulConstant(_ hh.VM, _ *hh.Contract) error {
+func paillierMulConstant(_ hh.VM, _ *hh.Ki) error {
 
 	return nil
 }

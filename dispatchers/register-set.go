@@ -8,7 +8,7 @@ func RegisterSet() []hh.Operation {
 	}
 }
 
-func loadReg(vm hh.VM, contract *hh.Contract) error {
+func loadReg(vm hh.VM, contract *hh.Ki) error {
 	slot, value, err := loadRegOperands(contract)
 	if err != nil {
 		return err
@@ -17,7 +17,7 @@ func loadReg(vm hh.VM, contract *hh.Contract) error {
 	return nil
 }
 
-func loadRegOperands(contract *hh.Contract) (slot byte, value []byte, err error) {
+func loadRegOperands(contract *hh.Ki) (slot byte, value []byte, err error) {
 	slot = contract.Code[contract.GetAndMovePCForward()]
 	size := hh.GetLenInt(contract.Code[contract.PC():contract.MovePCForwardN(2)])
 	value = contract.Code[contract.PC():contract.MovePCForwardN(size)]

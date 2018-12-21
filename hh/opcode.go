@@ -21,6 +21,7 @@ const(
 	POPN OpCode = iota + 0x20
 	PUSHN
 	SWAPN
+	POPTOREG
 )
 
 // 0x30 range - generic vm components ops.

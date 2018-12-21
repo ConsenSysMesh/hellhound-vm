@@ -27,12 +27,9 @@ func main() {
 
 	fmt.Println("HHVM version : ", hhvm.Version())
 
-	code := []byte{
+	energy := []byte{
 		byte(hh.LOADKEY), 0x05, 0x01, 0x00, 0x00, 0x04, 0x01, 0x02, 0x03, 0x04,
 		byte(hh.LOADREG), 0x03, 0x00, 0x08, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
-		byte(hh.PUSHN), 0x03, 0xAB, 0XCD, 0XEF,
-		byte(hh.PUSHN), 0x02, 0x0A, 0X0B,
-		byte(hh.PUSHN), 0x04, 0x09, 0x08, 0x07, 0x06,
 		byte(hh.PUSHN), 0x01, 0x02,
 		byte(hh.PUSHN), 0x01, 0x01,
 		byte(hh.ADD),
@@ -43,11 +40,12 @@ func main() {
 		byte(hh.PUSHN), 0x01, 0x02,
 		byte(hh.SWAPN), 0x02,
 		byte(hh.DIV),
+		byte(hh.POPTOREG), 0x01,
 	}
 
-	hhContract := hh.NewContract(code)
+	ki := hh.NewKi(energy)
 
-	err = hhvm.Run(hhContract)
+	err = hhvm.Consume(ki)
 	hhvm.Dump()
 	if err != nil {
 		log.Fatal(err)

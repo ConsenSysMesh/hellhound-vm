@@ -9,17 +9,18 @@ type dispatcher struct {
 	instructions map[hh.OpCode]hh.Instruction
 }
 
-func Dispatcher() VMConfigurer{
+func Dispatcher() VMConfigurer {
 	return DispatcherCfg(
 		dispatchers.Arithmetic(),
 		dispatchers.Stack(),
 		dispatchers.Keystore(),
 		dispatchers.RegisterSet(),
+		dispatchers.Memory(),
 		dispatchers.Paillier(),
 	)
 }
 
-func DispatcherCfg(subDispatchers ...[]hh.Operation) VMConfigurer{
+func DispatcherCfg(subDispatchers ...[]hh.Operation) VMConfigurer {
 	return func(_vm *vm) {
 		_vm.dispatcher = NewDispatcher(subDispatchers...)
 	}

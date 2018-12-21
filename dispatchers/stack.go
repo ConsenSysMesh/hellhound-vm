@@ -13,7 +13,7 @@ func Stack() []hh.Operation {
 	}
 }
 
-func pop(vm hh.VM, contract *hh.Contract) error{
+func pop(vm hh.VM, contract *hh.Ki) error{
 	size := int(contract.Code[contract.GetAndMovePCForward()])
 	for i := 0; i < size; i++{
 		vm.Stack().Pop()
@@ -21,14 +21,14 @@ func pop(vm hh.VM, contract *hh.Contract) error{
 	return nil
 }
 
-func push(vm hh.VM, contract *hh.Contract) error{
+func push(vm hh.VM, contract *hh.Ki) error{
 	size := int(contract.Code[contract.GetAndMovePCForward()])
 	value := big.NewInt(0).SetBytes(contract.Code[contract.PC() : contract.MovePCForwardN(size)])
 	vm.Stack().Push(value)
 	return nil
 }
 
-func swap(vm hh.VM, contract *hh.Contract) error{
+func swap(vm hh.VM, contract *hh.Ki) error{
 	size := int(contract.Code[contract.GetAndMovePCForward()])
 	vm.Stack().Swap(size)
 	return nil

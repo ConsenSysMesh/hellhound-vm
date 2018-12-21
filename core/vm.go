@@ -30,7 +30,7 @@ func NewVM(configurers ...VMConfigurer) (hh.VM, error) {
 	return vm, nil
 }
 
-func (vm *vm) Run(contract *hh.Contract) error {
+func (vm *vm) Consume(contract *hh.Ki) error {
 	// reset VM values
 	vm.reset()
 	for contract.PC() < len(contract.Code) {

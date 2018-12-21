@@ -9,7 +9,7 @@ type VM interface {
 	RegisterSet() RegisterSet
 	Stack() Stack
 	Version() string
-	Run(*Contract) error
+	Consume(*Ki) error
 	Dump()
 }
 
@@ -29,7 +29,7 @@ type Dispatcher interface {
 	Dispatch(OpCode) (Instruction, error)
 }
 
-type Instruction func(VM,*Contract) error
+type Instruction func(VM,*Ki) error
 
 type Operation struct {
 	OpCode      OpCode
