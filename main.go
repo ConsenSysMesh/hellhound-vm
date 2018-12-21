@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/hex"
 	"fmt"
 	"github.com/ConsenSys/hellhound-vm/core"
 	"github.com/ConsenSys/hellhound-vm/hh"
@@ -41,12 +42,16 @@ func main() {
 		byte(hh.SWAPN), 0x02,
 		byte(hh.DIV),
 		byte(hh.POPTOREG), 0x01,
+		byte(hh.STOP),
 	}
 
 	ki := hh.NewKi(kokyu)
 
 	err = tanden.Burn(ki)
+
 	tanden.Dump()
+	fmt.Println("hanko = ", hex.EncodeToString(core.HankoSensei().HankoN(tanden.HankoInputProviders()...)))
+
 	if err != nil {
 		log.Fatal(err)
 	}
