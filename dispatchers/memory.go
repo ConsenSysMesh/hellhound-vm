@@ -8,8 +8,8 @@ func Memory() []hh.Operation {
 	}
 }
 
-func popToReg(vm hh.VM, contract *hh.Ki) error{
-	slot := int(contract.Code[contract.GetAndMovePCForward()])
+func popToReg(vm hh.Tanden, contract *hh.Ki) error{
+	slot := int(contract.Kokyu[contract.GetAndMovePCForward()])
 	value := vm.Stack().Pop()
 	return vm.RegisterSet().Store(slot, value.Bytes())
 }

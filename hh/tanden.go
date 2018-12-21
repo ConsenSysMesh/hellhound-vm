@@ -4,9 +4,9 @@ import (
 	"encoding/hex"
 )
 
-type VM interface {
+type Tanden interface {
 	KiBurner
-	KiController
+	KiSensei
 	Keystore() Keystore
 	RegisterSet() RegisterSet
 	Stack() Stack
@@ -18,7 +18,7 @@ type KiBurner interface {
 	Burn(*Ki) error
 }
 
-type KiController interface {
+type KiSensei interface {
 	Flows(*Ki) (KiWave, error)
 }
 
@@ -38,7 +38,7 @@ type Dispatcher interface {
 	Dispatch(OpCode) (KiWave, error)
 }
 
-type KiWave func(VM,*Ki) error
+type KiWave func(Tanden,*Ki) error
 
 type Operation struct {
 	OpCode      OpCode

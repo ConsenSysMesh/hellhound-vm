@@ -1,15 +1,17 @@
 package hh
 
+type Kokyu []byte
+
 type Ki struct {
-	Code []byte
+	Kokyu Kokyu
 	// program counter
 	pc int
 }
 
-func NewKi(code []byte) *Ki {
+func NewKi(kokyu Kokyu) *Ki {
 	return &Ki{
-		Code: code,
-		pc:   0,
+		Kokyu: kokyu,
+		pc:    0,
 	}
 }
 
@@ -18,11 +20,11 @@ func (ki Ki) PC() int {
 }
 
 func (ki Ki) Burnable() bool{
-	return !ki.Drained() && OpCode(ki.Code[ki.PC()]) != STOP
+	return !ki.Drained() && OpCode(ki.Kokyu[ki.PC()]) != STOP
 }
 
 func (ki Ki) Drained() bool{
-	return ki.PC() >= len(ki.Code)
+	return ki.PC() >= len(ki.Kokyu)
 }
 
 func (ki *Ki) GetAndMovePCForward() int {

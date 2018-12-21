@@ -10,7 +10,7 @@ const (
 	version = "0.0.1"
 )
 
-type vm struct {
+type tanden struct {
 	keystore    hh.Keystore
 	registerSet hh.RegisterSet
 	dispatcher  hh.Dispatcher
@@ -19,29 +19,30 @@ type vm struct {
 	sp int
 }
 
-type VMConfigurer func(*vm)
+type TandenConfigurer func(*tanden)
 
-func NewVM(configurers ...VMConfigurer) (hh.VM, error) {
-	vm := &vm{}
+func NewTanden(configurers ...TandenConfigurer) (hh.Tanden, error) {
+	tanden := &tanden{}
 	configurers = append(configurers, Dispatcher())
 	for _, configurer := range configurers {
-		configurer(vm)
+		configurer(tanden)
 	}
-	return vm, nil
+	return tanden, nil
 }
 
-func (vm *vm) Burn(ki *hh.Ki) error {
-	// reset VM values
-	vm.reset()
+func (tanden *tanden) Burn(ki *hh.Ki) error {
+	// reset Tanden values
+	tanden.reset()
 	// check if Ki is burnable, meaning the current OpCode is not STOP
 	for ki.Burnable(){
 		// dispatch current opcode and get next instruction to execute
-		wave, err := vm.Flows(ki)
+		// the Ki flows
+		wave, err := tanden.Flows(ki)
 		if err != nil {
 			return err
 		}
 		// execute instruction
-		err = wave(vm, ki)
+		err = wave(tanden, ki)
 		if err != nil {
 			return err
 		}
@@ -49,52 +50,52 @@ func (vm *vm) Burn(ki *hh.Ki) error {
 	return nil
 }
 
-func (vm *vm) Flows(ki *hh.Ki) (hh.KiWave, error){
-	return vm.dispatcher.Dispatch(hh.OpCode(ki.Code[ki.GetAndMovePCForward()]))
+func (tanden *tanden) Flows(ki *hh.Ki) (hh.KiWave, error){
+	return tanden.dispatcher.Dispatch(hh.OpCode(ki.Kokyu[ki.GetAndMovePCForward()]))
 }
 
-func (vm *vm) reset() {
-	vm.sp = 0
+func (tanden *tanden) reset() {
+	tanden.sp = 0
 }
 
-func (vm vm) Stack() hh.Stack {
-	return vm.stack
+func (tanden tanden) Stack() hh.Stack {
+	return tanden.stack
 }
 
-func (vm vm) SP() int {
-	return vm.sp
+func (tanden tanden) SP() int {
+	return tanden.sp
 }
 
-func (vm vm) Version() string {
+func (tanden tanden) Version() string {
 	return version
 }
 
-func (vm vm) Keystore() hh.Keystore {
-	return vm.keystore
+func (tanden tanden) Keystore() hh.Keystore {
+	return tanden.keystore
 }
 
-func (vm vm) RegisterSet() hh.RegisterSet {
-	return vm.registerSet
+func (tanden tanden) RegisterSet() hh.RegisterSet {
+	return tanden.registerSet
 }
 
-func (vm vm) Dump() {
+func (tanden tanden) Dump() {
 	fmt.Println("--------------------------------------------")
 	fmt.Println("****** stack ********")
-	for i := vm.Stack().Len() - 1; i >= 0; i-- {
-		if vm.Stack().Data()[i] != nil {
-			fmt.Println(hex.EncodeToString(vm.Stack().Data()[i].Bytes()))
+	for i := tanden.Stack().Len() - 1; i >= 0; i-- {
+		if tanden.Stack().Data()[i] != nil {
+			fmt.Println(hex.EncodeToString(tanden.Stack().Data()[i].Bytes()))
 		}
 	}
 	fmt.Println("**************")
 	fmt.Println("****** keystore ********")
-	for slot, key := range vm.keystore.Keys() {
+	for slot, key := range tanden.keystore.Keys() {
 		if key != nil {
 			fmt.Printf("\t\t [ %3d ] = %s\n", slot, key.String())
 		}
 	}
 	fmt.Println("**************")
 	fmt.Println("****** register set ********")
-	for slot, entry := range vm.registerSet.Values() {
+	for slot, entry := range tanden.registerSet.Values() {
 		if entry != nil {
 			fmt.Printf("\t\t [ %3d ] = %s\n", slot, hex.EncodeToString(entry))
 		}

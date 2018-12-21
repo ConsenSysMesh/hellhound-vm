@@ -6,10 +6,10 @@ import (
 )
 
 type dispatcher struct {
-	instructions map[hh.OpCode]hh.KiWave
+	kiWaves map[hh.OpCode]hh.KiWave
 }
 
-func Dispatcher() VMConfigurer {
+func Dispatcher() TandenConfigurer {
 	return DispatcherCfg(
 		dispatchers.Arithmetic(),
 		dispatchers.Stack(),
@@ -20,28 +20,28 @@ func Dispatcher() VMConfigurer {
 	)
 }
 
-func DispatcherCfg(subDispatchers ...[]hh.Operation) VMConfigurer {
-	return func(_vm *vm) {
+func DispatcherCfg(subDispatchers ...[]hh.Operation) TandenConfigurer {
+	return func(_vm *tanden) {
 		_vm.dispatcher = NewDispatcher(subDispatchers...)
 	}
 }
 
 func NewDispatcher(subDispatchers ...[]hh.Operation) hh.Dispatcher {
-	instructions := make(map[hh.OpCode]hh.KiWave)
+	kiWaves := make(map[hh.OpCode]hh.KiWave)
 	for _, operations := range subDispatchers {
 		for _, route := range operations {
-			instructions[route.OpCode] = route.Instruction
+			kiWaves[route.OpCode] = route.KiWave
 		}
 	}
 	return &dispatcher{
-		instructions: instructions,
+		kiWaves: kiWaves,
 	}
 }
 
 func (dispatcher dispatcher) Dispatch(opcode hh.OpCode) (hh.KiWave, error) {
-	instruction, exists := dispatcher.instructions[opcode]
+	instruction, exists := dispatcher.kiWaves[opcode]
 	if !exists {
-		return nil, InstructionNotFound{Opcode: opcode}
+		return nil, KiWaveNotFound{OpCode: opcode}
 	}
 	return instruction, nil
 }

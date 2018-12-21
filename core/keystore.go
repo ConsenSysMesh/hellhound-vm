@@ -15,8 +15,8 @@ type keystore struct {
 	keys []*hh.Key
 }
 
-func KeystoreCfg(setters ...hh.KeystoreOption) VMConfigurer {
-	return func(_vm *vm) {
+func KeystoreCfg(setters ...hh.KeystoreOption) TandenConfigurer {
+	return func(_vm *tanden) {
 		_vm.keystore = NewKeystore(setters...)
 	}
 }
