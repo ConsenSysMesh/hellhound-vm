@@ -30,22 +30,27 @@ func NewVM(configurers ...VMConfigurer) (hh.VM, error) {
 	return vm, nil
 }
 
-func (vm *vm) Consume(contract *hh.Ki) error {
+func (vm *vm) Burn(ki *hh.Ki) error {
 	// reset VM values
 	vm.reset()
-	for contract.PC() < len(contract.Code) {
+	// check if Ki is burnable, meaning the current OpCode is not STOP
+	for ki.Burnable(){
 		// dispatch current opcode and get next instruction to execute
-		instruction, err := vm.dispatcher.Dispatch(hh.OpCode(contract.Code[contract.GetAndMovePCForward()]))
+		wave, err := vm.Flows(ki)
 		if err != nil {
 			return err
 		}
 		// execute instruction
-		err = instruction(vm, contract)
+		err = wave(vm, ki)
 		if err != nil {
 			return err
 		}
 	}
 	return nil
+}
+
+func (vm *vm) Flows(ki *hh.Ki) (hh.KiWave, error){
+	return vm.dispatcher.Dispatch(hh.OpCode(ki.Code[ki.GetAndMovePCForward()]))
 }
 
 func (vm *vm) reset() {

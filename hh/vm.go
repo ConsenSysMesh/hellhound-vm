@@ -5,12 +5,21 @@ import (
 )
 
 type VM interface {
+	KiBurner
+	KiController
 	Keystore() Keystore
 	RegisterSet() RegisterSet
 	Stack() Stack
 	Version() string
-	Consume(*Ki) error
 	Dump()
+}
+
+type KiBurner interface {
+	Burn(*Ki) error
+}
+
+type KiController interface {
+	Flows(*Ki) (KiWave, error)
 }
 
 type Keystore interface {
@@ -26,20 +35,20 @@ type RegisterSet interface {
 }
 
 type Dispatcher interface {
-	Dispatch(OpCode) (Instruction, error)
+	Dispatch(OpCode) (KiWave, error)
 }
 
-type Instruction func(VM,*Ki) error
+type KiWave func(VM,*Ki) error
 
 type Operation struct {
 	OpCode      OpCode
-	Instruction Instruction
+	KiWave KiWave
 }
 
-func NewInstruction(opcode OpCode, instruction Instruction) Operation {
+func NewKiWave(opcode OpCode, kiWave KiWave) Operation {
 	return Operation{
 		OpCode:      opcode,
-		Instruction: instruction,
+		KiWave: kiWave,
 	}
 }
 

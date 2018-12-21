@@ -6,7 +6,7 @@ import (
 
 func Keystore() []hh.Operation {
 	return []hh.Operation{
-		hh.NewInstruction(hh.LOADKEY, loadKey),
+		hh.NewKiWave(hh.LOADKEY, loadKey),
 	}
 }
 

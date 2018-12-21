@@ -4,9 +4,9 @@ import "github.com/ConsenSys/hellhound-vm/hh"
 
 func Paillier() []hh.Operation {
 	return []hh.Operation{
-		hh.NewInstruction(hh.PAILLIERADDCIPHERS, paillierAddCiphers),
-		hh.NewInstruction(hh.PAILIERADDCONSTANT, paillierAddConstant),
-		hh.NewInstruction(hh.PAILIERMULCONSTANT, paillierMulConstant),
+		hh.NewKiWave(hh.PAILLIERADDCIPHERS, paillierAddCiphers),
+		hh.NewKiWave(hh.PAILIERADDCONSTANT, paillierAddConstant),
+		hh.NewKiWave(hh.PAILIERMULCONSTANT, paillierMulConstant),
 	}
 }
 

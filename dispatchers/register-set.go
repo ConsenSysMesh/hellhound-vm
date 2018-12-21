@@ -4,7 +4,7 @@ import "github.com/ConsenSys/hellhound-vm/hh"
 
 func RegisterSet() []hh.Operation {
 	return []hh.Operation{
-		hh.NewInstruction(hh.LOADREG, loadReg),
+		hh.NewKiWave(hh.LOADREG, loadReg),
 	}
 }
 

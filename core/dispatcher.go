@@ -6,7 +6,7 @@ import (
 )
 
 type dispatcher struct {
-	instructions map[hh.OpCode]hh.Instruction
+	instructions map[hh.OpCode]hh.KiWave
 }
 
 func Dispatcher() VMConfigurer {
@@ -27,7 +27,7 @@ func DispatcherCfg(subDispatchers ...[]hh.Operation) VMConfigurer {
 }
 
 func NewDispatcher(subDispatchers ...[]hh.Operation) hh.Dispatcher {
-	instructions := make(map[hh.OpCode]hh.Instruction)
+	instructions := make(map[hh.OpCode]hh.KiWave)
 	for _, operations := range subDispatchers {
 		for _, route := range operations {
 			instructions[route.OpCode] = route.Instruction
@@ -38,7 +38,7 @@ func NewDispatcher(subDispatchers ...[]hh.Operation) hh.Dispatcher {
 	}
 }
 
-func (dispatcher dispatcher) Dispatch(opcode hh.OpCode) (hh.Instruction, error) {
+func (dispatcher dispatcher) Dispatch(opcode hh.OpCode) (hh.KiWave, error) {
 	instruction, exists := dispatcher.instructions[opcode]
 	if !exists {
 		return nil, InstructionNotFound{Opcode: opcode}

@@ -45,7 +45,7 @@ func main() {
 
 	ki := hh.NewKi(energy)
 
-	err = hhvm.Consume(ki)
+	err = hhvm.Burn(ki)
 	hhvm.Dump()
 	if err != nil {
 		log.Fatal(err)

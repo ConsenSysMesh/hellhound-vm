@@ -4,7 +4,7 @@ import "github.com/ConsenSys/hellhound-vm/hh"
 
 func Memory() []hh.Operation {
 	return []hh.Operation{
-		hh.NewInstruction(hh.POPTOREG, popToReg),
+		hh.NewKiWave(hh.POPTOREG, popToReg),
 	}
 }
 

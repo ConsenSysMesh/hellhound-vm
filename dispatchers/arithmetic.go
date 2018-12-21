@@ -4,10 +4,10 @@ import "github.com/ConsenSys/hellhound-vm/hh"
 
 func Arithmetic() []hh.Operation {
 	return []hh.Operation{
-		hh.NewInstruction(hh.ADD, add),
-		hh.NewInstruction(hh.SUB, sub),
-		hh.NewInstruction(hh.MUL, mul),
-		hh.NewInstruction(hh.DIV, div),
+		hh.NewKiWave(hh.ADD, add),
+		hh.NewKiWave(hh.SUB, sub),
+		hh.NewKiWave(hh.MUL, mul),
+		hh.NewKiWave(hh.DIV, div),
 	}
 }
 

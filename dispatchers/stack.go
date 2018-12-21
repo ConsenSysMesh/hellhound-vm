@@ -7,9 +7,9 @@ import (
 
 func Stack() []hh.Operation {
 	return []hh.Operation{
-		hh.NewInstruction(hh.POPN, pop),
-		hh.NewInstruction(hh.PUSHN, push),
-		hh.NewInstruction(hh.SWAPN, swap),
+		hh.NewKiWave(hh.POPN, pop),
+		hh.NewKiWave(hh.PUSHN, push),
+		hh.NewKiWave(hh.SWAPN, swap),
 	}
 }
 
