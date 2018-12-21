@@ -23,13 +23,14 @@ type VMConfigurer func(*vm)
 
 func NewVM(configurers ...VMConfigurer) (hh.VM, error) {
 	vm := &vm{}
+	configurers = append(configurers, Dispatcher())
 	for _, configurer := range configurers {
 		configurer(vm)
 	}
 	return vm, nil
 }
 
-func (vm *vm) Run(contract *hh.Contract) error {
+func (vm *vm) Consume(contract *hh.Ki) error {
 	// reset VM values
 	vm.reset()
 	for contract.PC() < len(contract.Code) {
@@ -73,21 +74,27 @@ func (vm vm) RegisterSet() hh.RegisterSet {
 
 func (vm vm) Dump() {
 	fmt.Println("--------------------------------------------")
-	fmt.Println("VM DUMP")
-	fmt.Println("\t KEYSTORE")
-	fmt.Printf("\t\t slots : %d\n", len(vm.keystore.Keys()))
+	fmt.Println("****** stack ********")
+	for i := vm.Stack().Len() - 1; i >= 0; i-- {
+		if vm.Stack().Data()[i] != nil {
+			fmt.Println(hex.EncodeToString(vm.Stack().Data()[i].Bytes()))
+		}
+	}
+	fmt.Println("**************")
+	fmt.Println("****** keystore ********")
 	for slot, key := range vm.keystore.Keys() {
 		if key != nil {
 			fmt.Printf("\t\t [ %3d ] = %s\n", slot, key.String())
 		}
 	}
-	fmt.Println("\t REGISTER SET")
-	fmt.Printf("\t\t slots : %d\n", len(vm.registerSet.Values()))
+	fmt.Println("**************")
+	fmt.Println("****** register set ********")
 	for slot, entry := range vm.registerSet.Values() {
 		if entry != nil {
 			fmt.Printf("\t\t [ %3d ] = %s\n", slot, hex.EncodeToString(entry))
 		}
 	}
+	fmt.Println("**************")
 	fmt.Println("--------------------------------------------")
 
 }
