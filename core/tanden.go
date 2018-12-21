@@ -34,7 +34,7 @@ func (tanden *tanden) Burn(ki *hh.Ki) error {
 	// reset Tanden values
 	tanden.reset()
 	// check if Ki is burnable, meaning the current OpCode is not STOP
-	for ki.Burnable(){
+	for ki.Burnable() {
 		// dispatch current opcode and get next instruction to execute
 		// the Ki flows
 		wave, err := tanden.Flows(ki)
@@ -50,7 +50,7 @@ func (tanden *tanden) Burn(ki *hh.Ki) error {
 	return nil
 }
 
-func (tanden *tanden) Flows(ki *hh.Ki) (hh.KiWave, error){
+func (tanden *tanden) Flows(ki *hh.Ki) (hh.KiWave, error) {
 	return tanden.dispatcher.Dispatch(hh.OpCode(ki.Kokyu[ki.GetAndMovePCForward()]))
 }
 
@@ -76,6 +76,13 @@ func (tanden tanden) Keystore() hh.Keystore {
 
 func (tanden tanden) RegisterSet() hh.RegisterSet {
 	return tanden.registerSet
+}
+
+func (tanden tanden) HankoInputProviders() []hh.HankoInputProvider {
+	return []hh.HankoInputProvider{
+		tanden.keystore,
+		tanden.registerSet,
+	}
 }
 
 func (tanden tanden) Dump() {

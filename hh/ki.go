@@ -48,3 +48,8 @@ func (ki *Ki) MovePCForwardN(n int) int {
 	ki.pc += n
 	return ki.pc
 }
+
+func (ki Ki) ProvideHankoInput() []byte {
+	return ki.Kokyu
+}
+

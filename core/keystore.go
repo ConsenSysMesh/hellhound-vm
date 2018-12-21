@@ -15,6 +15,8 @@ type keystore struct {
 	keys []*hh.Key
 }
 
+
+
 func KeystoreCfg(setters ...hh.KeystoreOption) TandenConfigurer {
 	return func(_vm *tanden) {
 		_vm.keystore = NewKeystore(setters...)
@@ -64,5 +66,15 @@ func (ks keystore) Keys() []*hh.Key {
 
 func (ks keystore) validSlot(slot int) bool {
 	return slot < len(ks.keys)
+}
+
+func (ks keystore) ProvideHankoInput() []byte {
+	var buf []byte
+	for _, key := range ks.Keys() {
+		if key != nil {
+			buf = append(buf, key.Value...)
+		}
+	}
+	return buf
 }
 

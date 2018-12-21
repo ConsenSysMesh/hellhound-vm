@@ -61,3 +61,13 @@ func (rs registerSet) Values() [][]byte {
 func (rs registerSet) validSlot(slot int) bool {
 	return slot > 0 && slot < len(rs.values)
 }
+
+func (rs registerSet) ProvideHankoInput() []byte {
+	var buf []byte
+	for _, entry := range rs.Values() {
+		if entry != nil {
+			buf = append(buf, entry...)
+		}
+	}
+	return buf
+}

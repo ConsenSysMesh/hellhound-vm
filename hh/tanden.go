@@ -7,6 +7,7 @@ import (
 type Tanden interface {
 	KiBurner
 	KiSensei
+	HankoInputProviders() []HankoInputProvider
 	Keystore() Keystore
 	RegisterSet() RegisterSet
 	Stack() Stack
@@ -23,12 +24,14 @@ type KiSensei interface {
 }
 
 type Keystore interface {
+	HankoInputProvider
 	Store(slot int, key *Key) error
 	Get(slot int) (*Key, error)
 	Keys() []*Key
 }
 
 type RegisterSet interface {
+	HankoInputProvider
 	Store(slot int, entry []byte) error
 	Get(slot int) ([]byte, error)
 	Values() [][]byte
