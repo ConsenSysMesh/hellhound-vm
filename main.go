@@ -10,7 +10,7 @@ import (
 func main() {
 	fmt.Println("starting Hellhound virtual machine")
 
-	hhvm, err := core.NewVM(
+	tanden, err := core.NewTanden(
 		core.StackCfg(
 			hh.StackSize(32),
 		),
@@ -25,9 +25,9 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Println("HHVM version : ", hhvm.Version())
+	fmt.Println("HHVM version : ", tanden.Version())
 
-	energy := []byte{
+	kokyu := hh.Kokyu{
 		byte(hh.LOADKEY), 0x05, 0x01, 0x00, 0x00, 0x04, 0x01, 0x02, 0x03, 0x04,
 		byte(hh.LOADREG), 0x03, 0x00, 0x08, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
 		byte(hh.PUSHN), 0x01, 0x02,
@@ -43,13 +43,12 @@ func main() {
 		byte(hh.POPTOREG), 0x01,
 	}
 
-	ki := hh.NewKi(energy)
+	ki := hh.NewKi(kokyu)
 
-	err = hhvm.Consume(ki)
-	hhvm.Dump()
+	err = tanden.Burn(ki)
+	tanden.Dump()
 	if err != nil {
 		log.Fatal(err)
 	}
-
 
 }

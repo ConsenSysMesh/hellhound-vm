@@ -4,32 +4,32 @@ import "github.com/ConsenSys/hellhound-vm/hh"
 
 func Arithmetic() []hh.Operation {
 	return []hh.Operation{
-		hh.NewInstruction(hh.ADD, add),
-		hh.NewInstruction(hh.SUB, sub),
-		hh.NewInstruction(hh.MUL, mul),
-		hh.NewInstruction(hh.DIV, div),
+		hh.NewKiWave(hh.ADD, add),
+		hh.NewKiWave(hh.SUB, sub),
+		hh.NewKiWave(hh.MUL, mul),
+		hh.NewKiWave(hh.DIV, div),
 	}
 }
 
-func add(vm hh.VM, _ *hh.Ki) error {
+func add(vm hh.Tanden, _ *hh.Ki) error {
 	x, y := vm.Stack().Pop(), vm.Stack().Peek()
 	y.Add(x, y)
 	return nil
 }
 
-func sub(vm hh.VM, _ *hh.Ki) error {
+func sub(vm hh.Tanden, _ *hh.Ki) error {
 	x, y := vm.Stack().Pop(), vm.Stack().Peek()
 	y.Sub(x, y)
 	return nil
 }
 
-func mul(vm hh.VM, _ *hh.Ki) error {
+func mul(vm hh.Tanden, _ *hh.Ki) error {
 	x, y := vm.Stack().Pop(), vm.Stack().Peek()
 	y.Mul(x, y)
 	return nil
 }
 
-func div(vm hh.VM, _ *hh.Ki) error {
+func div(vm hh.Tanden, _ *hh.Ki) error {
 	x, y := vm.Stack().Pop(), vm.Stack().Peek()
 	y.Div(x, y)
 	return nil
