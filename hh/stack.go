@@ -8,6 +8,7 @@ type Stack interface {
 	PushN(...*big.Int)
 	Pop() (*big.Int)
 	Peek() *big.Int
-	Get(n int) *big.Int
+	Get(int) *big.Int
+	Swap(int)
 	Len() int
 }

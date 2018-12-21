@@ -18,8 +18,9 @@ const(
 
 // 0x20 range - storage and execution
 const(
-	POP OpCode = iota + 0x20
-	PUSH
+	POPN OpCode = iota + 0x20
+	PUSHN
+	SWAPN
 )
 
 // 0x30 range - generic vm components ops.

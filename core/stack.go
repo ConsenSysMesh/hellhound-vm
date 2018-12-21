@@ -45,6 +45,10 @@ func (stack *stack) Get(n int) *big.Int {
 	return stack.data[stack.Len()-n-1]
 }
 
+func (stack *stack) Swap(n int) {
+	stack.data[stack.Len()-n], stack.data[stack.Len()-1] = stack.data[stack.Len()-1], stack.data[stack.Len()-n]
+}
+
 func StackCfg(setters ...hh.StackOption) VMConfigurer {
 	return func(_vm *vm) {
 		_vm.stack = NewStack(setters...)
