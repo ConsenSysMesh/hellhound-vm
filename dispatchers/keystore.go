@@ -6,11 +6,11 @@ import (
 
 func Keystore() []hh.Operation {
 	return []hh.Operation{
-		hh.NewInstruction(hh.LOADKEY, loadKey),
+		hh.NewKiWave(hh.LOADKEY, loadKey),
 	}
 }
 
-func loadKey(vm hh.VM, contract *hh.Ki) error{
+func loadKey(vm hh.Tanden, contract *hh.Ki) error{
 	slot, keyType, usage, keyValue, err := loadKeyOperands(contract)
 	if err != nil{
 		return err
@@ -20,10 +20,10 @@ func loadKey(vm hh.VM, contract *hh.Ki) error{
 }
 
 func loadKeyOperands(contract *hh.Ki) (slot, keyType, usage byte, keyValue []byte, err error){
-	slot = contract.Code[contract.GetAndMovePCForward()]
-	keyType = contract.Code[contract.GetAndMovePCForward()]
-	usage = contract.Code[contract.GetAndMovePCForward()]
-	size := hh.GetLenInt(contract.Code[contract.PC() : contract.MovePCForwardN(2)])
-	keyValue = contract.Code[contract.PC() : contract.MovePCForwardN(size)]
+	slot = contract.Kokyu[contract.GetAndMovePCForward()]
+	keyType = contract.Kokyu[contract.GetAndMovePCForward()]
+	usage = contract.Kokyu[contract.GetAndMovePCForward()]
+	size := hh.GetLenInt(contract.Kokyu[contract.PC() : contract.MovePCForwardN(2)])
+	keyValue = contract.Kokyu[contract.PC() : contract.MovePCForwardN(size)]
 	return
 }

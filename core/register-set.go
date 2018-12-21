@@ -16,8 +16,8 @@ type registerSet struct {
 	values [][]byte
 }
 
-func RegisterSetCfg(setters ...hh.RegisterSetOption) VMConfigurer {
-	return func(_vm *vm) {
+func RegisterSetCfg(setters ...hh.RegisterSetOption) TandenConfigurer {
+	return func(_vm *tanden) {
 		_vm.registerSet = NewRegisterSet(setters...)
 	}
 }

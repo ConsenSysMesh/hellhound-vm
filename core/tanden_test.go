@@ -6,7 +6,7 @@ import (
 )
 
 func TestHhvm_New(t *testing.T) {
-	hhvm, err := NewVM()
+	hhvm, err := NewTanden()
 	if err != nil{
 		t.Errorf("HHVM creation should not fail : %s", err.Error())
 	}
