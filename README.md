@@ -13,25 +13,25 @@ The HHVM is compose of the following elements :
 ## Initialize VM
 
 ```go
-hhvm, err := core.NewVM(
+	fmt.Println("creating Tanden virtual machine")
+	tanden, err := core.NewTanden(
+		core.StackCfg(
+			hh.StackSize(32),
+		),
 		core.KeystoreCfg(
 			hh.KeystoreSlotNumber(8),
 		),
 		core.RegisterSetCfg(
 			hh.RegisterSetSlotNumber(8),
 		),
-		core.DispatcherCfg(
-			dispatchers.Keystore(),
-			dispatchers.RegisterSet(),
-			dispatchers.Paillier(),
-		),
 	)
-```
+	if err != nil {
+		log.Fatal(err)
+	}
 
-## Run code
+	fmt.Println("HHVM version : ", tanden.Version())
 
-```go
-	energy := []byte{
+	kokyu := hh.Kokyu{
 		byte(hh.LOADKEY), 0x05, 0x01, 0x00, 0x00, 0x04, 0x01, 0x02, 0x03, 0x04,
 		byte(hh.LOADREG), 0x03, 0x00, 0x08, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
 		byte(hh.PUSHN), 0x01, 0x02,
@@ -45,10 +45,13 @@ hhvm, err := core.NewVM(
 		byte(hh.SWAPN), 0x02,
 		byte(hh.DIV),
 		byte(hh.POPTOREG), 0x01,
+		byte(hh.STOP),
 	}
 
-	ki := hh.NewKi(energy)
+	ki := hh.NewKi(kokyu)
 
-	err = hhvm.Consume(ki)
+	err = tanden.Burn(ki)
+
+	tanden.Dump()
 ```
 
