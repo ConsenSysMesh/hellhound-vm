@@ -1,0 +1,11 @@
+image: golang:1.11-alpine
+
+stages:
+  - build
+  - test
+  - quality
+
+build:
+  stage: build
+  script:
+    - go build ./...
