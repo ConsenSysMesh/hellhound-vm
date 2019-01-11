@@ -1,6 +1,9 @@
 package core
 
 import (
+	"bytes"
+	"encoding/hex"
+	"fmt"
 	"reflect"
 	"testing"
 
@@ -11,17 +14,33 @@ func TestKeystoreCfg(t *testing.T) {
 	type args struct {
 		setters []hh.KeystoreOption
 	}
+
+	tandenMock := tanden{}
+
 	tests := []struct {
 		name string
 		args args
-		want TandenConfigurer
+		wantNil bool
+		wantKeystoreSlotNumber int
+		tandenMock tanden
 	}{
-		// TODO: Add test cases.
+		{
+			name: "nominal case",
+			args: args{setters: []hh.KeystoreOption{hh.KeystoreSlotNumber(8)}},
+			wantNil:false,
+			wantKeystoreSlotNumber: 8,
+			tandenMock: tandenMock,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := KeystoreCfg(tt.args.setters...); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("KeystoreCfg() = %v, want %v", got, tt.want)
+			got := KeystoreCfg(tt.args.setters...)
+			if got == nil && !tt.wantNil{
+				t.Error("configurer should not be nil")
+			}
+			got(&tt.tandenMock)
+			if len(tt.tandenMock.keystore.Keys()) != tt.wantKeystoreSlotNumber{
+				t.Error("invalid keystore slot number")
 			}
 		})
 	}
@@ -34,15 +53,16 @@ func TestNewKeystore(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want hh.Keystore
+		wantKeystoreSlotNumber int
 	}{
-		// TODO: Add test cases.
+		{
+			name: "nominal case",
+			args: args{setters: []hh.KeystoreOption{hh.KeystoreSlotNumber(8)}},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := NewKeystore(tt.args.setters...); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("NewKeystore() = %v, want %v", got, tt.want)
-			}
+			NewKeystore(tt.args.setters...)
 		})
 	}
 }
@@ -56,38 +76,65 @@ func TestKeystoreFromOptions(t *testing.T) {
 		args args
 		want hh.Keystore
 	}{
-		// TODO: Add test cases.
+		{
+			name: "nominal case",
+			args: args{defaultKeystoreOptions},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := KeystoreFromOptions(tt.args.opts); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("KeystoreFromOptions() = %v, want %v", got, tt.want)
-			}
+			KeystoreFromOptions(tt.args.opts)
 		})
 	}
 }
 
 func Test_keystore_Store(t *testing.T) {
-	type fields struct {
-		keys []*hh.Key
+	type opts struct {
+		setters []hh.KeystoreOption
 	}
 	type args struct {
 		slot int
 		key  *hh.Key
 	}
+	keyMock := hh.NewKey(0x00, 0x00, bytes.Repeat([]byte{0x00}, 16))
+
 	tests := []struct {
 		name    string
-		fields  fields
+		opts  opts
 		args    args
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{
+			name: "nominal case",
+			opts: opts{setters: []hh.KeystoreOption{hh.KeystoreSlotNumber(8)}},
+			args:args{
+				slot:0,
+				key: keyMock,
+			},
+			wantErr: false,
+		},
+		{
+			name: "nil key",
+			opts: opts{setters: []hh.KeystoreOption{hh.KeystoreSlotNumber(8)}},
+			args:args{
+				slot:0,
+				key: nil,
+			},
+			wantErr: true,
+		},
+		{
+			name: "invalid slot",
+			opts: opts{setters: []hh.KeystoreOption{hh.KeystoreSlotNumber(8)}},
+			args:args{
+				slot:-1,
+				key: keyMock,
+			},
+			wantErr: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			ks := keystore{
-				keys: tt.fields.keys,
-			}
+			ks := NewKeystore(tt.opts.setters...)
 			if err := ks.Store(tt.args.slot, tt.args.key); (err != nil) != tt.wantErr {
 				t.Errorf("keystore.Store() error = %v, wantErr %v", err, tt.wantErr)
 			}
@@ -106,10 +153,44 @@ func Test_keystore_Get(t *testing.T) {
 		name    string
 		fields  fields
 		args    args
-		want    *hh.Key
+		want    []byte
 		wantErr bool
+		ignoreReturn bool
 	}{
-		// TODO: Add test cases.
+		{
+			name: "nominal case",
+			fields: fields{
+				[]*hh.Key{
+					hh.NewKey(0x00, 0x00, bytes.Repeat([]byte{0x00}, 16)),
+				},
+			},
+			args:args{slot:0},
+			want: bytes.Repeat([]byte{0x00}, 16),
+			wantErr: false,
+		},
+		{
+			name: "invalid slot",
+			fields: fields{
+				[]*hh.Key{
+					hh.NewKey(0x00, 0x00, bytes.Repeat([]byte{0x00}, 16)),
+				},
+			},
+			args:args{slot:-1},
+			ignoreReturn: true,
+			wantErr: true,
+		},
+		{
+			name: "empty slot",
+			fields: fields{
+				[]*hh.Key{
+					hh.NewKey(0x00, 0x00, bytes.Repeat([]byte{0x00}, 16)),
+					nil,
+				},
+			},
+			args:args{slot:1},
+			wantErr: true,
+			ignoreReturn:true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -121,7 +202,7 @@ func Test_keystore_Get(t *testing.T) {
 				t.Errorf("keystore.Get() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if !reflect.DeepEqual(got, tt.want) {
+			if !tt.ignoreReturn && !reflect.DeepEqual(got.Value, tt.want) {
 				t.Errorf("keystore.Get() = %v, want %v", got, tt.want)
 			}
 		})
@@ -137,7 +218,17 @@ func Test_keystore_Keys(t *testing.T) {
 		fields fields
 		want   []*hh.Key
 	}{
-		// TODO: Add test cases.
+		{
+			name: "nominal case",
+			fields: fields{
+				[]*hh.Key{
+					hh.NewKey(0x00, 0x00, bytes.Repeat([]byte{0x00}, 16)),
+				},
+			},
+			want: []*hh.Key{
+				hh.NewKey(0x00, 0x00, bytes.Repeat([]byte{0x00}, 16)),
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -151,32 +242,6 @@ func Test_keystore_Keys(t *testing.T) {
 	}
 }
 
-func Test_keystore_validSlot(t *testing.T) {
-	type fields struct {
-		keys []*hh.Key
-	}
-	type args struct {
-		slot int
-	}
-	tests := []struct {
-		name   string
-		fields fields
-		args   args
-		want   bool
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			ks := keystore{
-				keys: tt.fields.keys,
-			}
-			if got := ks.validSlot(tt.args.slot); got != tt.want {
-				t.Errorf("keystore.validSlot() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
 
 func Test_keystore_ProvideHankoInput(t *testing.T) {
 	type fields struct {
@@ -187,7 +252,16 @@ func Test_keystore_ProvideHankoInput(t *testing.T) {
 		fields fields
 		want   []byte
 	}{
-		// TODO: Add test cases.
+		{
+			name: "nominal case",
+			fields: fields{
+				[]*hh.Key{
+					hh.NewKey(0x00, 0x00, bytes.Repeat([]byte{0x00}, 16)),
+				},
+			},
+			want: bytes.Repeat([]byte{0x00}, 16),
+
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -195,6 +269,7 @@ func Test_keystore_ProvideHankoInput(t *testing.T) {
 				keys: tt.fields.keys,
 			}
 			if got := ks.ProvideHankoInput(); !reflect.DeepEqual(got, tt.want) {
+				fmt.Println(hex.EncodeToString(got))
 				t.Errorf("keystore.ProvideHankoInput() = %v, want %v", got, tt.want)
 			}
 		})
