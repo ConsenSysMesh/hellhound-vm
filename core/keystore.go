@@ -42,7 +42,7 @@ func (ks keystore) Store(slot int, key *hh.Key) error {
 	if !ks.validSlot(slot) {
 		return fmt.Errorf("invalid slot %d", slot)
 	}
-	if !key.IsValid() {
+	if key == nil || !key.IsValid() {
 		return fmt.Errorf("invalid key")
 	}
 	ks.keys[slot] = key
@@ -65,7 +65,7 @@ func (ks keystore) Keys() []*hh.Key {
 }
 
 func (ks keystore) validSlot(slot int) bool {
-	return slot < len(ks.keys)
+	return slot >= 0 && slot < len(ks.keys)
 }
 
 func (ks keystore) ProvideHankoInput() []byte {
