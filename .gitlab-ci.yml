@@ -1,4 +1,4 @@
-image: golang:1.11-alpine
+image: golang:1.11-stretch
 
 stages:
   - build
