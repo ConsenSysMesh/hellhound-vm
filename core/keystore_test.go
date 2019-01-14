@@ -53,7 +53,6 @@ func TestNewKeystore(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		wantKeystoreSlotNumber int
 	}{
 		{
 			name: "nominal case",
