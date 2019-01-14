@@ -1,0 +1,26 @@
+image: golang:1.11-stretch
+
+stages:
+  - build
+  - test
+  - quality
+
+build:
+  stage: build
+  script:
+    - go build ./...
+
+test:
+  stage: test
+  script:
+    - go test ./...
+
+
+coverage:
+  stage: test
+  script:
+    - go test ./... -coverprofile cover.out; go tool cover -func cover.out
+  artifacts:
+    paths:
+    - cover.out
+    expire_in: 1 week
