@@ -16,11 +16,11 @@ type Tanden interface {
 }
 
 type KiBurner interface {
-	Burn(*Ki) error
+	Burn(Ki) error
 }
 
 type KiSensei interface {
-	Flows(*Ki) (KiWave, error)
+	Flows(Ki) (KiWave, error)
 }
 
 type Keystore interface {
@@ -41,7 +41,7 @@ type Dispatcher interface {
 	Dispatch(OpCode) (KiWave, error)
 }
 
-type KiWave func(Tanden,*Ki) error
+type KiWave func(Tanden,Ki) error
 
 type Operation struct {
 	OpCode      OpCode

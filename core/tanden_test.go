@@ -44,7 +44,7 @@ func Test_tanden_Burn(t *testing.T) {
 		sp          int
 	}
 	type args struct {
-		ki *hh.Ki
+		ki hh.Ki
 	}
 	tests := []struct {
 		name    string
@@ -79,7 +79,7 @@ func Test_tanden_Flows(t *testing.T) {
 		sp          int
 	}
 	type args struct {
-		ki *hh.Ki
+		ki hh.Ki
 	}
 	tests := []struct {
 		name    string

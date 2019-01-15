@@ -30,7 +30,7 @@ func NewTanden(configurers ...TandenConfigurer) (hh.Tanden, error) {
 	return tanden, nil
 }
 
-func (tanden *tanden) Burn(ki *hh.Ki) error {
+func (tanden *tanden) Burn(ki hh.Ki) error {
 	// reset Tanden values
 	tanden.reset()
 	// check if Ki is burnable, meaning the current OpCode is not STOP
@@ -50,34 +50,41 @@ func (tanden *tanden) Burn(ki *hh.Ki) error {
 	return nil
 }
 
-func (tanden *tanden) Flows(ki *hh.Ki) (hh.KiWave, error) {
-	return tanden.dispatcher.Dispatch(hh.OpCode(ki.Kokyu[ki.GetAndMovePCForward()]))
+func (tanden *tanden) Flows(ki hh.Ki) (hh.KiWave, error) {
+	return tanden.dispatcher.Dispatch(hh.OpCode(ki.Kokyu()[ki.GetAndMovePCForward()]))
 }
 
+// reset Tanden values for new Ki burning
 func (tanden *tanden) reset() {
 	tanden.sp = 0
 }
 
+// return the Stack interface
 func (tanden tanden) Stack() hh.Stack {
 	return tanden.stack
 }
 
+// return the Stack pointer
 func (tanden tanden) SP() int {
 	return tanden.sp
 }
 
+// return the Tanden
 func (tanden tanden) Version() string {
 	return version
 }
 
+// return the Keystore interface
 func (tanden tanden) Keystore() hh.Keystore {
 	return tanden.keystore
 }
 
+// return the RegisterSet interface
 func (tanden tanden) RegisterSet() hh.RegisterSet {
 	return tanden.registerSet
 }
 
+// return the inputs to compute the footprint of the Tanden
 func (tanden tanden) HankoInputProviders() []hh.HankoInputProvider {
 	return []hh.HankoInputProvider{
 		tanden.keystore,
@@ -85,6 +92,7 @@ func (tanden tanden) HankoInputProviders() []hh.HankoInputProvider {
 	}
 }
 
+// dump Tanden internal values
 func (tanden tanden) Dump() {
 	fmt.Println("--------------------------------------------")
 	fmt.Println("****** stack ********")

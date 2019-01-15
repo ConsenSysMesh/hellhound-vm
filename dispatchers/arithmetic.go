@@ -11,25 +11,25 @@ func Arithmetic() []hh.Operation {
 	}
 }
 
-func add(vm hh.Tanden, _ *hh.Ki) error {
+func add(vm hh.Tanden, _ hh.Ki) error {
 	x, y := vm.Stack().Pop(), vm.Stack().Peek()
 	y.Add(x, y)
 	return nil
 }
 
-func sub(vm hh.Tanden, _ *hh.Ki) error {
+func sub(vm hh.Tanden, _ hh.Ki) error {
 	x, y := vm.Stack().Pop(), vm.Stack().Peek()
 	y.Sub(x, y)
 	return nil
 }
 
-func mul(vm hh.Tanden, _ *hh.Ki) error {
+func mul(vm hh.Tanden, _ hh.Ki) error {
 	x, y := vm.Stack().Pop(), vm.Stack().Peek()
 	y.Mul(x, y)
 	return nil
 }
 
-func div(vm hh.Tanden, _ *hh.Ki) error {
+func div(vm hh.Tanden, _ hh.Ki) error {
 	x, y := vm.Stack().Pop(), vm.Stack().Peek()
 	y.Div(x, y)
 	return nil
