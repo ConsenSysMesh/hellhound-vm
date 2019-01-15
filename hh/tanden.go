@@ -23,24 +23,6 @@ type KiSensei interface {
 	Flows(Ki) (KiWave, error)
 }
 
-type Keystore interface {
-	HankoInputProvider
-	Store(slot int, key *Key) error
-	Get(slot int) (*Key, error)
-	Keys() []*Key
-}
-
-type RegisterSet interface {
-	HankoInputProvider
-	Store(slot int, entry []byte) error
-	Get(slot int) ([]byte, error)
-	Values() [][]byte
-}
-
-type Dispatcher interface {
-	Dispatch(OpCode) (KiWave, error)
-}
-
 type KiWave func(Tanden,Ki) error
 
 type Operation struct {

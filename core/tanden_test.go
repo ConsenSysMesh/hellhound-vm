@@ -1,6 +1,8 @@
 package core
 
 import (
+	"github.com/ConsenSys/hellhound-vm/mocks"
+	"github.com/golang/mock/gomock"
 	"reflect"
 	"testing"
 
@@ -36,6 +38,16 @@ func TestNewTanden(t *testing.T) {
 }
 
 func Test_tanden_Burn(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	keystoreMock := mocks.NewMockKeystore(ctrl)
+	keystoreMock.
+		EXPECT().
+		Get(gomock.Any()).
+		Return(nil, nil)
+
+	keystoreMock.Get(0)
+
 	type fields struct {
 		keystore    hh.Keystore
 		registerSet hh.RegisterSet
